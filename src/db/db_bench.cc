@@ -31,6 +31,8 @@
 #include "util/testutil.h"
 #include "util/testharness.h"
 
+#define NDEBUG
+
 #define MAX_TRACE_OPS 100000000
 #define MAX_VALUE_SIZE (1024 * 1024)
 #define sassert(X) {if (!(X)) std::cerr << "\n\n\n\n" << status.ToString() << "\n\n\n\n"; assert(X);}
