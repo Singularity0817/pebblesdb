@@ -15,7 +15,8 @@ option(PEBBLESDB_INSTALL "Install PebblesDB's header and library" ON)
 option(PEBBLESDB_BUILD_TESTS "Build PeblesDB's unit tests" ON)
 
 # Setup the basic C++ Compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-variadic-macros")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wno-variadic-macros")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -w -Wno-variadic-macros")
 
 message(STATUS "CMAKE_SOURCE_DIR:    " ${CMAKE_SOURCE_DIR})
 
@@ -132,7 +133,8 @@ target_sources(pebblesdb
         "${PROJECT_SOURCE_DIR}/util/comparator.cc"
         "${PROJECT_SOURCE_DIR}/util/crc32c.cc"
         "${PROJECT_SOURCE_DIR}/util/env.cc"
-        "${PROJECT_SOURCE_DIR}/util/env_posix.cc"
+#        "${PROJECT_SOURCE_DIR}/util/env_posix.cc"
+        "${PROJECT_SOURCE_DIR}/util/env_pmdk.cc"
         "${PROJECT_SOURCE_DIR}/util/filter_policy.cc"
         "${PROJECT_SOURCE_DIR}/util/hash.cc"
         "${PROJECT_SOURCE_DIR}/util/histogram.cc"
@@ -156,6 +158,9 @@ endif (HAVE_SNAPPY)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(pebblesdb Threads::Threads)
+
+LINK_DIRECTORIES("/usr/local/lib")
+target_link_libraries(pebblesdb pmem)
 
 message(STATUS "C++ flags:    " ${CMAKE_CXX_FLAGS})
 
@@ -193,8 +198,10 @@ if (PEBBLESDB_BUILD_TESTS)
     pebblesdb_test("${PROJECT_SOURCE_DIR}/db/corruption_test.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/util/crc32c_test.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/db/db_test.cc")
+    pebblesdb_test("${PROJECT_SOURCE_DIR}/db/db_bench.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/db/dbformat_test.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/util/env_test.cc")
+    pebblesdb_test("${PROJECT_SOURCE_DIR}/util/env_pmdk_test.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/db/filename_test.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/table/filter_block_test.cc")
     pebblesdb_test("${PROJECT_SOURCE_DIR}/db/log_test.cc")
